@@ -55,8 +55,7 @@ router.get('/:productBrand/:productsSize', (req, res, next)=>{
 });
 // a route to to update the product
 router.patch('/:productId', (req,res, next)=>{
-    // qty = req.body.qty;
-    id = req.body.productId;
+    id = req.params.productId;
     res.status(201).json({
         message: 'UPDATE a shoe of id: '+id+ ' on /shoes'
 
