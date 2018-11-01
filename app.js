@@ -1,11 +1,30 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 let app = express();
+let ProductService = require('./services/product-service');
+const pg = require('pg');
+let Pool = pg.Pool;
 const morgan = require('morgan');
 
 let productRoutes = require('./api/routes/products');
 let ordersRoutes = require('./api/routes/orders');
 
+//Using a SSL connection
+let useSSL = false;
+let local = process.env.LOCAL || false;
+if(process.env.DATABASE_URL && !local){
+    useSSL = true;
+}
+
+//the databse to use 
+const connectionString = process.env.DATABASE_URL || 'postgresql://busisile:pg123@localhost/{my-database}'
+
+const pool = new Pool({
+    connectionString,
+    ssl: useSSL
+});
+
+const productService = ProductService(pool);
 //middware
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
