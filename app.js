@@ -17,7 +17,7 @@ if(process.env.DATABASE_URL && !local){
 }
 
 //the databse to use 
-const connectionString = process.env.DATABASE_URL || 'postgresql://busisile:pg123@localhost/{my-database}'
+const connectionString = process.env.DATABASE_URL || 'postgresql://busisile:pg123@localhost/shoes_database';
 
 const pool = new Pool({
     connectionString,
@@ -25,6 +25,7 @@ const pool = new Pool({
 });
 
 const productService = ProductService(pool);
+let productApi = productRoutes(productService);
 //middware
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -41,7 +42,7 @@ app.use((req,res, next)=>{
     next();
 });
 
-app.use('/api/shoes', productRoutes);
+app.use('/api/shoes',productApi.router);
 app.use('/orders', ordersRoutes);
 
 //Error handling
